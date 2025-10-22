@@ -1,0 +1,110 @@
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+}
+
+body {
+  background-color: #1a1a2e; /* Dark navy */
+  color: white;
+}
+
+/* Navbar */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 60px;
+  background-color: #111;
+}
+
+.logo {
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 30px;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+  padding: 8px 15px;
+  border-radius: 5px;
+}
+
+nav ul li a.active,
+nav ul li a:hover {
+  background-color: #ff4f81; /* Pink highlight */
+}
+
+/* Hero Section */
+.hero {
+  text-align: center;
+  padding: 100px 20px;
+}
+
+.hero h1 {
+  font-size: 60px;
+  letter-spacing: 10px;
+}
+
+.hero h3 {
+  margin: 15px 0;
+  font-weight: 400;
+  color: #ccc;
+}
+
+.hero p {
+  max-width: 600px;
+  margin: 15px auto;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #ddd;
+}
+
+.btn {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 12px 30px;
+  background: #ff4f81;
+  color: white;
+  font-weight: bold;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.btn:hover {
+  background: #e04472;
+}
+
+/* Packages Section */
+.packages {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding: 60px 20px;
+  background: #ff4f81;
+}
+
+.card {
+  background: white;
+  color: black;
+  padding: 20px;
+  border-radius: 8px;
+  width: 250px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.card h3 {
+  margin-bottom: 10px;
+  color: #111;
+}

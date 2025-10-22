@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Anisoft Landing Page</title>
+ <style>
+ body {
+ margin: 0;
+ font-family: Arial, Helvetica, sans-serif;
+ background-color: #000000;
+ color: #808080;
+ }
+ header {
+ background-color: #B22222;
+ padding: 10px 20px;
+ }
+ nav {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ }
+ nav .logo {
+ font-size: 1.5em;
+ font-weight: bold;
+ color: #ffffff;
+ }
+ nav ul {
+ list-style: none;
+ margin: 0;
+ padding: 0;
+ display: flex;
+ }
+ nav ul li {
+ position: relative;
+ }
+ nav ul li a {
+ display: block;
+ padding: 10px 20px;
+ color: #ffffff;
+ text-decoration: none;
+ }
+ nav ul li a:hover {
+ background-color: #808080;
+ color: #000000;
+ transition: 0.3s;
+ }
+ /* Dropdown */
+ nav ul li ul {
+ display: none;
+ position: absolute;
+ background-color: #B22222;
+ top: 100%;
+ left: 0;
+ min-width: 160px;
+ z-index: 1000;
+ }
+ nav ul li:hover ul {
+ display: block;
+ }
+ nav ul li ul li a {
+ padding: 10px;
+ }
+ /* Hero Section */
+ .hero {
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ height: 80vh;
+ background: url("https://images.unsplash.com/photo-1519389950473-
+47ba0277781c?auto=format&fit=crop&w=1600&q=80") no-repeat center center/cover;
+ color: #ffffff;
+ text-align: center;
+ flex-direction: column;
+ position: relative;
+ }
+ .hero::after {
+ content: "";
+ position: absolute;
+ top: 0;
+ left: 0;
+ width: 100%;
+ height: 100%;
+ background: rgba(0,0,0,0.6);
+ }
+ .hero h1, .hero p, .hero button {
+ position: relative;
+ z-index: 1;
+ }
+ .hero h1 {
+ font-size: 3em;
+ margin: 0;
+ color: #B22222;
+ }
+ .hero p {
+ font-size: 1.2em;
+ max-width: 600px;
+ }
+ .btn {
+ margin-top: 20px;
+ padding: 12px 24px;
+ background-color: #B22222;
+ color: #ffffff;
+ border: none;
+ cursor: pointer;
+ font-size: 1em;
+ }
+ .btn:hover {
+ background-color: #808080;
+ color: #000000;
+ transition: 0.3s;
+ }
+ /* Grid Section */
+ .features {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+ gap: 20px;
+ padding: 40px;
+ background-color: #1a1a1a;
+ }
+ .card {
+ background-color: #333333;
+ padding: 20px;
+ border-radius: 8px;
+ text-align: center;
+ color: #ffffff;
+ }
+ .card img {
+ width: 100%;
+ height: 150px;
+ object-fit: cover;
+ border-radius: 6px;
+ margin-bottom: 15px;
+ }
+ .card h3 {
+ color: #B22222;
+ }
+ footer {
+ background-color: #000000;
+ text-align: center;
+ padding: 20px;
+ color: #808080;
+ }
+ </style>
+</head>
+<body>
+ <header>
+ <nav>
+ <div class="logo">Anisoft</div>
+ <ul>
+ <li><a href="#">Home</a></li>
+ <li>
+ <a href="#">Services ▼</a>
+ <ul>
+ <li><a href="#">Web Development</a></li>
+ <li><a href="#">App Development</a></li>
+ <li><a href="#">Cloud Solutions</a></li>
+ </ul>
+ </li>
+ <li>
+ <a href="#">About ▼</a>
+ <ul>
+ <li><a href="#">Our Team</a></li>
+ <li><a href="#">Careers</a></li>
+ </ul>
+ </li>
+ <li><a href="#">Contact</a></li>
+ </ul>
+ </nav>
+ </header>
+ <section class="hero">
+ <h1>Welcome to Anisoft</h1>
+ <p>Delivering cutting-edge IT solutions with reliability, innovation, and excellence in
+technology.</p>
+ <button class="btn">Get Started</button>
+ </section>
+ <section class="features">
+ <div class="card">
+ <img src="https://images.unsplash.com/photo-1518770660439-
+4636190af475?auto=format&fit=crop&w=800&q=80" alt="Web Development">
+ <h3>Web Solutions</h3>
+ <p>Custom websites built with modern design and security.</p>
+ </div>
+ <div class="card">
+ <img src="https://images.unsplash.com/photo-1517430816045-
+df4b7de11d1d?auto=format&fit=crop&w=800&q=80" alt="Mobile Apps">
+ <h3>Mobile Apps</h3>
+ <p>Scalable mobile applications for Android and iOS platforms.</p>
+ </div>
+ <div class="card">
+ <img src="https://images.unsplash.com/photo-1515378791036-
+0648a3ef77b2?auto=format&fit=crop&w=800&q=80" alt="Cloud Services">
+ <h3>Cloud Services</h3>
+ <p>Secure and reliable cloud-based infrastructure.</p>
+ </div>
+ </section>
+ <footer>
+ <p>&copy; 2025 Anisoft. All rights reserved.</p>
+ </footer>
+</body>
+</html>

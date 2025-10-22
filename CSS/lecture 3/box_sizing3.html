@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+  margin: 0;
+}
+* {
+  box-sizing: border-box;
+}
+input, textarea {
+  width: 100%;
+}
+#demo{
+   padding: 12px;
+   box-sizing: border-box;
+}
+</style>
+</head>
+<body>
+
+<form action="/action_page.php">
+  First name:<br>
+  <input type="text" name="firstname" value="Mickey"><br>
+  Last name:<br>
+  <input id="demo" type="text" name="lastname" value="Mouse"><br>
+  Comments:<br>
+  <textarea name="message" rows="5" cols="30"></textarea>
+  <br><br>
+  <input type="submit" value="Submit">
+</form> 
+
+<p><strong>Tip:</strong> Now that <code>box-sizing</code> is removed, notice how the width of 
+the input, textarea, and submit button goes beyond the screen 
+because the <code>padding</code> is added on top of the <code>width</code>.</p>
+
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+  margin: 0;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #333;   /* border on individual items */
+  box-sizing: border-box;   /* applied individually */
+}
+
+input[type=submit] {
+  background-color: lightblue;
+  border: 2px solid #333;   /* border for submit */
+  box-sizing: border-box;   /* applied individually */
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<form action="/action_page.php">
+  First name:<br>
+  <input type="text" name="firstname" value="Mickey"><br>
+  Last name:<br>
+  <input type="text" name="lastname" value="Mouse"><br>
+  Comments:<br>
+  <textarea name="message" rows="5" cols="30"></textarea>
+  <br><br>
+  <input type="submit" value="Submit">
+</form> 
+
+<p><strong>Tip:</strong> Here, <code>box-sizing: border-box;</code> is applied only to form fields. 
+Each element now respects the <code>width: 100%</code> including padding and border, without overflowing.</p>
+
+</body>
+</html>

@@ -1,0 +1,107 @@
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #03123b, #8b9be4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.container {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  padding: 30px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  animation: fadeIn 1s ease;
+}
+h1 {
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 28px;
+}
+.input-group {
+  margin: 15px 0;
+  text-align: left;
+}
+label {
+  display: block;
+  font-size: 14px;
+  color: #030d12;
+  margin-bottom: 6px;
+}
+input::placeholder {
+  color: #ffffff;
+  opacity: 1;
+}
+input {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: #0b026b;
+  font-size: 16px;
+  outline: none;
+  transition: 0.3s;
+}
+input:focus {
+  background: #02112b;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.4);
+}
+button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 20px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(45deg, #ff6a00, #ee0979);
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(238, 9, 121, 0.4);
+}
+.result {
+  margin-top: 25px;
+  padding: 20px;
+  border-radius: 15px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #fff;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease;
+}
+.result.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+/* Different BMI categories */
+.underweight {
+  background: #00bcd4;
+}
+.normal {
+  background: #4caf50;
+}
+.overweight {
+  background: #ffc107;
+}
+.obese {
+  background: #f44336;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

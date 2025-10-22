@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Event Handling Example</title>
+    <style>
+      #myButton {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+    </style>
+    <!-- <script>
+      // Step 1: Event Registration
+      document.addEventListener("DOMContentLoaded", function () {
+        // Step 2: Event Binding
+        document.getElementById("myButton").addEventListener("click", function () {
+            // Step 3: Event Handling
+            alert('Button clicked!');
+          });
+      });
+    </script> -->
+  </head>
+  <body>
+    <!-- HTML element to be monitored -->
+    <button id="myButton">Click me</button>
+    <p id="msg"></p>
+    <script>
+        button=document.getElementById("myButton");
+        m=document.getElementById("msg");
+        button.addEventListener("click", function () {
+          // Step 3: Event Handling
+          // alert("Button clicked!");
+          m.innerHTML="Button was clicked!";
+          button.style.backgroundColor = 'green';
+        });
+    </script>
+  </body>
+</html>

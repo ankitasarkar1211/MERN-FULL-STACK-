@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width initial-scale=1.0">
+ <title>Weather of the city</title>
+ <style>
+ body {
+ background-color: aliceblue;
+ margin: 0;
+ padding: 0;
+ justify-content: center;
+ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+ }
+ .container {
+ background-color: aqua;
+ margin: 100px;
+ padding: 10px;
+ font-size: medium;
+ text-align: center;
+ }
+ button {
+ text-align: center;
+ margin: 20px 30px;
+ padding: 10px 20px;
+ border: 1px solid #fff;
+ border-radius: 2px;
+ }
+ button:hover {
+ background-color: blueviolet;
+ }
+ #weatherInfo {
+ margin-top: 20px;
+ font-weight: bold;
+ }
+ </style>
+</head>
+<body>
+ <div class="container">
+ <h1>Weather</h1>
+ <button onclick="fetchWeather('Kolkata')">Get Kolkata Weather</button>
+ <button onclick="fetchWeather('Bangalore')">Get Bangalore Weather</button>
+ <button onclick="fetchWeather('Gurgaon')">Get Gurgaon Weather</button>
+ <div id="weatherInfo"></div>
+ </div>
+ <script>
+ function fetchWeather(city) {
+    function weatherCallback(data) {
+      var weatherInfo = document.getElementById('weatherInfo');
+      weatherInfo.innerHTML = "Weather of " + data.city + ": Temperature " + data.temp + "°C";
+    }
+  Weather(city, weatherCallback);
+}
+ function Weather(city, callback) {
+    setTimeout(function () {
+    var data;
+    if (city.toLowerCase() === "kolkata") {
+    data = { city: "Kolkata", temp: 42 };
+    } else if (city.toLowerCase() === "bangalore") {
+    data = { city: "Bangalore", temp: 35 };
+    } else if (city.toLowerCase() === "gurgaon") {
+    data = { city: "Gurgaon", temp: 37 };
+    } else {
+    data = { city: "Unknown", temp: "N/A" };
+    }
+    callback(data);
+    }, 2000);
+ }
+ </script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multiple Events Example</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: #eef2f3;
+    }
+    button {
+      padding: 12px 25px;
+      font-size: 18px;
+      border: none;
+      border-radius: 6px;
+      background: #28a745;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #218838;
+    }
+    p {
+      margin-top: 25px;
+      font-size: 22px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <button id="btn">Click or Hover Me</button>
+  <p id="msg"></p>
+
+  <script>
+    let b = document.getElementById("btn")
+    let m = document.getElementById("msg")
+
+    b.addEventListener("click", function() {
+      m.textContent = "You clicked the button!"
+    })
+
+    b.addEventListener("mouseover", function() {
+      m.textContent = "Mouse is over the button!"
+    })
+
+    b.addEventListener("mouseout", function() {
+      m.textContent = "Mouse left the button!"
+    })
+  </script>
+</body>
+</html>

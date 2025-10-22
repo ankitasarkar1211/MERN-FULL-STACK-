@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grid Column Sizes</title>
+  <style>
+    .grid {
+      display: grid;
+      grid-template-columns: 200px 1fr 2fr;
+      gap: 15px;
+    }
+    .item {
+      background: lightgreen;
+      padding: 20px;
+      text-align: center;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="grid">
+    <div class="item">Fixed 200px</div>
+    <div class="item">Flexible 1fr</div>
+    <div class="item">Flexible 2fr</div>
+  </div>
+</body>
+</html>

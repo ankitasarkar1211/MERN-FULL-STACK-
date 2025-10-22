@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parallax Example</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .parallax {
+      background-image: url('https://picsum.photos/1920/1080');
+      height: 100vh;
+      background-attachment: fixed;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    .content {
+      height: 100vh;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="parallax"></div>
+
+  <div class="content">
+    Foreground Content Section
+  </div>
+
+  <div class="parallax"></div>
+
+  <div class="content">
+    Another Content Section
+  </div>
+
+</body>
+</html>
