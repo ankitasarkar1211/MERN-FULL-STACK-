@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dropdown Menu</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      select {
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="dropdownContainer"></div>
+
+    <script>
+      const createDropdown = (options) => {
+        const select = document.createElement("select");
+        options.forEach((option) => {
+          const optionElement = document.createElement("option");
+          optionElement.value = option.value;
+          optionElement.textContent = option.text;
+          select.appendChild(optionElement);
+        });
+        return select;
+      };
+
+      const dropdownOptions = [
+        { value: "apple", text: "Apple" },
+        { value: "banana", text: "Banana" },
+        { value: "cherry", text: "Cherry" },
+        { value: "orange", text: "Orange" },
+      ];
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const dropdown = createDropdown(dropdownOptions);
+        const container = document.getElementById("dropdownContainer");
+        if (container) {
+          container.appendChild(dropdown);
+        } else {
+          console.error("Container element not found.");
+        }
+      });
+    </script>
+  </body>
+</html>

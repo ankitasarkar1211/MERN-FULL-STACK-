@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shopping Cart</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+      }
+      .container,#total,#clear-btn,#msg {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 50px;
+      }
+      .cards {
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        width: 200px;
+        text-align: center;
+        box-shadow: 2px 2px 12px #aaa;
+      }
+      .product {
+        padding: 15px;
+      }
+      .addToCart {
+        background-color: #7f5405;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .addToCart:hover {
+        background-color: #6d4905;
+      }
+      img {
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+      }
+      #clearBtn {
+        background-color: #a90a0a;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      #clearBtn:hover {
+        background-color: #910808;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="cards">
+        <img src="https://i.pinimg.com/1200x/80/21/a3/8021a3f67351984fd6d908555cc1825c.jpg" alt="Bottle image" style="width: 100%" />
+        <div class="product" id="product1">
+          <h4><b>Bottle</b></h4>
+          <p>Price: Rs.150</p>
+          <button class="addToCart" id="addToCart" data-name="Bottle" data-price="150">Add to Cart</button>
+        </div>
+      </div>
+      <div class="cards">
+        <img src="https://i.pinimg.com/736x/18/ef/46/18ef464f34a2d0e6d98ce60ed4e0bb4d.jpg" alt="Cup image" style="width: 100%" />
+        <div class="product" id="product2">
+          <h4><b>Cups</b></h4>
+          <p>Price: Rs.300</p>
+          <button class="addToCart" id="addToCart" data-name="Cups" data-price="300">Add to Cart</button>
+        </div>
+      </div>
+      <div class="cards">
+        <img src="https://i.pinimg.com/1200x/cf/f6/d3/cff6d3c5cbbacb97abc2f42ec13dbd49.jpg" alt="Bottle image" style="width: 100%" />
+        <div class="product" id="product3">
+          <h4><b>Plates</b></h4>
+          <p>Price: Rs.400</p>
+          <button class="addToCart" id="addToCart" data-name="Plates" data-price="400">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+    <div id="total">Total: Rs.0</div>
+    <div id="clear-btn"><button id="clearBtn">Clear Cart</button></div> 
+    <div id="msg"></div>
+  </body>
+  <script>
+    let cart=[];
+    let total=0;
+
+    const totalDiv=document.getElementById("total");
+    const messageDiv=document.getElementById("msg");
+
+    const addToCart=document.querySelectorAll(".addToCart");
+    addToCart.forEach(btn => {
+      btn.addEventListener("click", function(){
+        const name=this.getAttribute("data-name");
+        const price=Number(this.getAttribute("data-price"));
+        cart.push({name:name, price:price});
+        total+=price;
+        totalDiv.textContent= "Total: Rs." + total;
+        messageDiv.textContent= "Product "+ name+ " is added to the cart";
+        this.style.backgroundColor = "green";
+      });
+    });
+
+    const clearBtn=document.getElementById("clearBtn");
+    clearBtn.addEventListener("click", function(){
+      cart=[];
+      total=0;
+      totalDiv.textContent= "Total: Rs." + total;
+      messageDiv.textContent= "Cart is cleared";
+      addToCart.forEach(btn => {
+        btn.style.backgroundColor = "";
+      });
+    });
+  </script>
+</html>

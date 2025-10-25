@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Counter App with Event Listeners</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f5f5f5;
+      transition: background-color 0.3s;
+    }
+
+    .container {
+      text-align: center;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    #counter {
+      font-size: 50px;
+      margin: 20px 0;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 5px;
+      background-color: #049f3f;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #027e32;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Counter App</h1>
+    <div id="counter">0</div>
+    <button id="increaseBtn">Increase</button>
+    <button id="decreaseBtn">Decrease</button>
+    <button id="resetBtn">Reset</button>
+  </div>
+
+  <script>
+    let count = 0;
+    const counter = document.getElementById('counter');
+    const increaseBtn = document.getElementById('increaseBtn');
+    const decreaseBtn = document.getElementById('decreaseBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    function updateCounter() {
+      counter.textContent = count;
+      document.body.style.backgroundColor = count % 2 === 0 ? '#d4edda' : '#f8d7da';
+    }
+
+    increaseBtn.addEventListener('click', () => {
+      count++;
+      updateCounter();
+    });
+
+    decreaseBtn.addEventListener('click', () => {
+      count--;
+      updateCounter();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      count = 0;
+      updateCounter();
+    });
+  </script>
+</body>
+</html>
