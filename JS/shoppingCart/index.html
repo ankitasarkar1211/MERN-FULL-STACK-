@@ -16,10 +16,15 @@
         justify-content: space-around;
         margin-top: 50px;
       }
+      #total,#clear-btn,#msg{
+        margin-top: 30px;
+        font-size: 20px;
+        justify-content: center;
+      }
       .cards {
         border: 1px solid #ccc;
         border-radius: 10px;
-        width: 200px;
+        width: 250px;
         text-align: center;
         box-shadow: 2px 2px 12px #aaa;
       }
@@ -48,6 +53,7 @@
         border: none;
         border-radius: 5px;
         cursor: pointer;
+        font-size: 15px;
       }
       #clearBtn:hover {
         background-color: #910808;
@@ -102,6 +108,7 @@
         totalDiv.textContent= "Total: Rs." + total;
         messageDiv.textContent= "Product "+ name+ " is added to the cart";
         this.style.backgroundColor = "green";
+        clearBtn.style.backgroundColor = ""
       });
     });
 
@@ -111,6 +118,7 @@
       total=0;
       totalDiv.textContent= "Total: Rs." + total;
       messageDiv.textContent= "Cart is cleared";
+      this.style.backgroundColor = "#910808";
       addToCart.forEach(btn => {
         btn.style.backgroundColor = "";
       });

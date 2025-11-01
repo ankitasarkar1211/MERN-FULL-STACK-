@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Shopping Cart</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .product { margin-bottom: 10px; }
+    button { margin-left: 10px; padding: 5px 10px; }
+    #message { margin-top: 20px; font-weight: bold; color: blue; }
+    #total { margin-top: 20px; font-size: 18px; }
+  </style>
+</head>
+<body>
+
+<h2>Products</h2>
+<div class="product">
+  Product 1 - $10 <button class="add-btn" data-name="Product 1" data-price="10">Add to Cart</button>
+</div>
+<div class="product">
+  Product 2 - $15 <button class="add-btn" data-name="Product 2" data-price="15">Add to Cart</button>
+</div>
+<div class="product">
+  Product 3 - $20 <button class="add-btn" data-name="Product 3" data-price="20">Add to Cart</button>
+</div>
+
+<div id="total">Total: $0</div>
+<button id="clear-btn">Clear Cart</button>
+<div id="message"></div>
+
+<script>
+let cart = [];
+let total = 0;
+
+const totalDiv = document.getElementById("total");
+const messageDiv = document.getElementById("message");
+
+const addButtons = document.querySelectorAll(".add-btn");
+addButtons.forEach(btn => {
+  btn.addEventListener("click", function() {
+    const name = this.getAttribute("data-name");
+    const price = Number(this.getAttribute("data-price"));
+    cart.push({name: name, price: price});
+    total += price;
+    totalDiv.textContent = "Total: $" + total;
+    messageDiv.textContent = "Product " + name + " added to cart!";
+    this.style.backgroundColor = "green";
+  });
+});
+
+const clearBtn = document.getElementById("clear-btn");
+clearBtn.addEventListener("click", function() {
+  cart = [];
+  total = 0;
+  totalDiv.textContent = "Total: $0";
+  messageDiv.textContent = "Cart cleared!";
+  addButtons.forEach(btn => btn.style.backgroundColor = "");
+});
+</script>
+
+</body>
+</html>

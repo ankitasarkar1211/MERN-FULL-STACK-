@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Even Numbers</title>
+  <style>
+    body{
+      margin: 0;
+      padding: 0;
+      background-color: rgb(236, 204, 164);
+    }
+    .container {
+      margin: auto;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    input {
+      padding: 10px;
+      width: 250px;
+      font-size: 16px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      border: 1px solid #555;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: rgb(121, 60, 5);
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Enter Array Elements (comma separated)</h2>
+    <input type="text" id="userArray" placeholder="e.g. 1,2,3,4,5,6,7,8,9,10">
+    <button id="evenNum_btn">Show Even Numbers</button>
+    <div id="evenNum"></div>
+    <button id="evenSum_btn">Sum of Even Numbers</button>
+    <div id="evenSum"></div>
+  </div>
+
+  <script>
+    const evenNum = document.getElementById("evenNum");
+    const evenSum = document.getElementById("evenSum");
+    const evenNum_btn = document.getElementById("evenNum_btn");
+    const evenSum_btn = document.getElementById("evenSum_btn");
+
+    let evenNumbers = [];
+
+    evenNum_btn.addEventListener("click", function() {
+      const userInput = document.getElementById("userArray").value;
+      const arr = userInput.split(",").map(Number);
+      evenNumbers = arr.filter(el => el % 2 == 0);
+      evenNum.innerHTML = "Even Numbers are: " + evenNumbers.join(", ");
+    });
+
+    evenSum_btn.addEventListener("click", function() {
+      if (evenNumbers.length === 0) {
+        evenSum.innerHTML = "Please click 'Show Even Numbers' first.";
+      } else {
+        let sum = 0;
+        evenNumbers.forEach(el => sum += el);
+        evenSum.innerHTML = "Sum of Even Numbers is: " + sum;
+      }
+    });
+  </script>
+</body>
+</html>

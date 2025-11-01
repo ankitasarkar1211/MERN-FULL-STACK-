@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Even Numbers</title>
+  <style>
+    body{
+      margin: 0;
+      padding: 0;
+      background-color: rgb(236, 204, 164);
+    }
+    .container {
+      margin: auto;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    button {
+      margin-top: 20px;
+      margin-bottom: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: rgb(121, 60, 5);
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="arrayElements"><h2>Array Elements are [1,2,3,4,5,6,7,8,9,10]</h2></div>
+    <button id="evenNum_btn">Show Even Numbers</button>
+    <div id="evenNum"></div>
+    <button id="evenSum_btn">Sum of Even Numbers</button>
+    <div id="evenSum"></div>
+  </div>
+</body>
+<script>
+  let arr=[1,2,3,4,5,6,7,8,9,10];
+  let evenNumbers=arr.filter(el => el%2==0);
+  const evenNum=document.getElementById("evenNum");
+  const evenNum_btn=document.getElementById("evenNum_btn");
+  evenNum_btn.addEventListener("click", function(){
+    evenNum.innerHTML="Even Numbers are: " + evenNumbers.join(", ");
+  });
+  const evenSum_btn=document.getElementById("evenSum_btn");
+  const evenSum=document.getElementById("evenSum");
+  evenSum_btn.addEventListener("click", function(){
+    let sum=0;
+    evenNumbers.forEach(el => sum+=el);
+    evenSum.innerHTML="Sum of Even Numbers is: " + sum;
+  });
+</script>
+</html>
