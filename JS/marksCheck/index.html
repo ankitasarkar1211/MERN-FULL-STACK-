@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Average of above 75 Numbers</title>
+  <style>
+    body{
+      margin: 0;
+      padding: 0;
+      background-color: rgb(236, 204, 164);
+    }
+    .container {
+      margin: auto;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    input {
+      padding: 10px;
+      width: 250px;
+      font-size: 16px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      border: 1px solid #555;
+    }
+    button {
+      margin-top: 20px;
+      margin-bottom: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: rgb(121, 60, 5);
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Enter Marks of Students (comma separated)</h2>
+    <input type="text" id="userArray" placeholder="e.g. 60,78,85,45,92,73">
+    <button id="above75_btn">Show Marks above 75</button>
+    <div id="above75_div"></div>
+    <button id="average_btn">Average of above 75 marks</button>
+    <div id="average_div"></div>
+  </div>
+
+  <script>
+    const above75_btn = document.getElementById("above75_btn");
+    const above75_div = document.getElementById("above75_div");
+    const average_btn = document.getElementById("average_btn");
+    const average_div = document.getElementById("average_div");
+
+    let above75_array = [];
+
+    above75_btn.addEventListener('click', () => {
+      const userArray = document.getElementById("userArray").value;
+      let arr = userArray.split(",").map(Number);
+      above75_array = arr.filter(el => el > 75);
+      if (above75_array.length > 0)
+        above75_div.innerHTML = "Marks above 75 are: " + above75_array.join(", ");
+      else
+        above75_div.innerHTML = "No marks above 75 found.";
+    });
+
+    average_btn.addEventListener('click', () => {
+      if (above75_array.length === 0) {
+        average_div.innerHTML = "Please click 'Show Marks above 75' button first or no qualifying marks found.";
+        return;
+      }
+      let total = 0;
+      above75_array.forEach(el => total += el);
+      let avg = total / above75_array.length;
+      average_div.innerHTML = "Average of marks above 75 is: " + avg.toFixed(2);
+    });
+  </script>
+</body>
+</html>
