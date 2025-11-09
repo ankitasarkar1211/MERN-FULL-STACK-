@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grocery cart</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      .cards_container {
+        display: flex;
+        justify-content: space-around;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+
+      <div class="cards_container">
+        <div class="cards">
+          <div id="potato">
+            <h3><b>Potato</b></h3>
+            <button class="addToCart" data-name="potato">Add to Cart</button>
+          </div>
+        </div>
+        <div class="cards">
+          <div id="tomato">
+            <h3><b>Tomato</b></h3>
+            <button class="addToCart" data-name="tomato">Add to Cart</button>
+          </div>
+        </div>
+        <div class="cards">
+          <div id="brinjal">
+            <h3><b>Brinjal</b></h3>
+            <button class="addToCart" data-name="brinjal">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="msg"></div>
+      <button id="viewCartBtn">View Cart</button>
+      <div id="viewCart"></div>
+      <button id="removeItemBtn">Remove an Item</button>
+    </div>
+  </body>
+  <script>
+    let msg = document.getElementById("msg");
+    let viewCartBtn = document.getElementById("viewCartBtn");
+    let viewCart = document.getElementById("viewCart");
+    let removeItemBtn = document.getElementById("removeItemBtn");
+
+    let cart=[];
+    let addToCart=document.querySelectorAll(".addToCart");
+    addToCart.forEach(btn => {
+      //do not use arrow func, when using "this", arrow does not have own this
+      btn.addEventListener("click", function() { 
+        const name=this.getAttribute("data-name");
+        cart.push({name:name});
+        msg.innerHTML="Item "+ name+" is added to the cart.";
+      });
+    });
+    viewCartBtn.addEventListener("click", () => {
+      viewCart.innerHTML= "Cart contains "+ cart(name).join(",");
+    });
+  </script>
+</html>
