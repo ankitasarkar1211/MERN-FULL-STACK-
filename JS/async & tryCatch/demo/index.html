@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Async/Await Demo App</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 40px;
+      }
+      #container {
+        max-width: 500px;
+        padding: 20px;
+      }
+      button {
+        padding: 10px 20px;
+        border: none;
+        background: black;
+        color: white;
+        cursor: pointer;
+      }
+      #output {
+        margin-top: 20px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        min-height: 100px;
+      }
+      .user {
+        padding: 5px 0;
+      }
+      .error {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <h2>Fetch Users App (Async/Await + Try-Catch)</h2>
+      <button onclick="loadUsers()">Load Users</button>
+
+      <div id="output"></div>
+    </div>
+
+    <script>
+      async function loadUsers() {
+        const output = document.getElementById("output");
+        output.innerHTML = "Loading...";
+
+        try {
+          // API call
+          let response = await fetch(
+            "https://jsonplaceholder.typicode.com/users"
+          );
+
+          // Check if response is ok
+          if (!response.ok) {
+            throw new Error("Network request failed");
+          }
+
+          // Convert to JSON
+          let users = await response.json(); //convert to object format
+          // console.log("Fetched Users:", users); // Log fetched users
+
+          // Display users
+          output.innerHTML = "";
+          users.forEach((user) => {
+            output.innerHTML += `
+                    <div class="user">
+                        <strong>${user.name}</strong><br>
+                        Email: ${user.email}<br>
+                        City: ${user.address.city}<br>
+                        Zipcode: ${user.address.zipcode}
+                    </div>
+                    <hr>
+                `;
+          });
+        } catch (error) {
+          // Handles all failures
+          output.innerHTML = `<div class='error'>Error: ${error.message}</div>`;
+        }
+      }
+    </script>
+  </body>
+</html>
