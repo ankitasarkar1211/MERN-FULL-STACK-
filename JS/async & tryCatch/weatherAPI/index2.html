@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather App</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #e9ecef;
+        }
+
+        .container {
+            width: 320px;
+            margin: 60px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px gray;
+            text-align: center;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #aaa;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            border: none;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="container">
+    <h2>Weather App</h2>
+
+    <input type="text" id="cityInput" placeholder="Enter city name">
+    <input type="text" id="apiKey" placeholder="Enter your API Key">
+
+    <button onclick="getWeather()">Get Weather</button>
+
+    <div id="result"></div>
+</div>
+
+<script>
+    async function getWeather() {
+        const city = document.getElementById("cityInput").value;
+        const key = document.getElementById("apiKey").value;
+        const resultDiv = document.getElementById("result");
+
+        if (!city || !key) {
+            resultDiv.innerHTML = "Please enter both city and API key.";
+            return;
+        }
+
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${key}`;
+
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (data.cod != 200) {
+                resultDiv.innerHTML = "Invalid city or API key.";
+                return;
+            }
+
+            const temp = (data.main.temp - 273.15).toFixed(1);
+            const desc = data.weather[0].description;
+
+            resultDiv.innerHTML = `
+                <h3>${city}</h3>
+                <p>Temperature: ${temp}°C</p>
+                <p>Weather: ${desc}</p>
+            `;
+        } 
+        catch (error) {
+            resultDiv.innerHTML = "Error fetching weather.";
+        }
+    }
+</script>
+
+</body>
+</html>
