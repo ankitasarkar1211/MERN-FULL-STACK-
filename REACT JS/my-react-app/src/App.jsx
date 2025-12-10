@@ -1,61 +1,60 @@
 import React, { useState } from "react";
 
-function AddTwoNumbers() {
-  const [num1, setNum1] = useState("");
-  const [num2, setNum2] = useState("");
-  const [sum, setSum] = useState(null);
+function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [count, setCount] = useState(0);
 
-  const handleAdd = () => {
-    setSum(Number(num1) + Number(num2));
+  // Toggle login state
+  const handleLogin = () => {
+    setIsLoggedIn(!isLoggedIn);
   };
 
   return (
-    <div
-      style={{
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <div
-        style={{
-          textAlign: "center",
-          padding: "20px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "15px",
-          width: "250px",
-          border: "1px solid #ccc",
-          borderRadius: "10px",
-        }}
-      >
-        <h2>Add Two Numbers</h2>
+    <div style={{ textAlign: "center", marginTop: "50px" }}>
 
-        <input
-          type="number"
-          placeholder="Enter first number"
-          value={num1}
-          onChange={(e) => setNum1(e.target.value)}
-          style={{ padding: "8px", width: "100%", textAlign: "center" }}
-        />
+      {/* --- 1. Simple IF condition --- */}
+      <h1>{isLoggedIn ? "Welcome Back!" : "Please Log In"}</h1>
 
-        <input
-          type="number"
-          placeholder="Enter second number"
-          value={num2}
-          onChange={(e) => setNum2(e.target.value)}
-          style={{ padding: "8px", width: "100%", textAlign: "center" }}
-        />
+      <button onClick={handleLogin}>
+        {isLoggedIn ? "Logout" : "Login"}
+      </button>
 
-        <button onClick={handleAdd} style={{ padding: "10px" }}>
-          Add
-        </button>
 
-        <h3>Sum: {sum}</h3>
-      </div>
+      {/* --- 2. Rendering Components Conditionally --- */}
+      {isLoggedIn ? <Dashboard /> : <Guest />}
+
+
+      {/* --- 3. Conditional Rendering with Logic --- */}
+      <h2>Counter: {count}</h2>
+      <button onClick={() => setCount(count + 1)}>Increase</button>
+
+      {count > 5 && <p>You clicked more than 5 times!</p>}
+
+      {count === 10 ? (
+        <p>You reached 10! </p>
+      ) : (
+        <p>Keep clicking...</p>
+      )}
     </div>
   );
 }
 
-export default AddTwoNumbers;
+function Dashboard() {
+  return (
+    <div>
+      <h2>You are logged in </h2>
+      <p>This is your dashboard.</p>
+    </div>
+  );
+}
+
+function Guest() {
+  return (
+    <div>
+      <h2>You are not logged in </h2>
+      <p>Please login to access features.</p>
+    </div>
+  );
+}
+
+export default App;
