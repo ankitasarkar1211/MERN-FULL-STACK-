@@ -28,8 +28,8 @@ function App() {
       name: name,
       price: Number(price)
     };
-
-    setProducts([...products, newProduct]);
+    //... means spread operator which is used to copy the existing array elements
+    setProducts([...products, newProduct]); // Add new product to the list
     setName("");
     setPrice("");
   };
