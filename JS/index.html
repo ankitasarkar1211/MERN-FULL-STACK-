@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Software Training Centre</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f8f9fa;
+      }
+      header {
+        background: #003566;
+        color: white;
+        padding: 15px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      header h2 {
+        margin: 0;
+      }
+      nav ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+      }
+      nav ul li {
+        position: relative;
+        padding: 12px 20px;
+        cursor: pointer;
+      }
+      nav ul li:hover {
+        background: #001d3d;
+      }
+      nav ul li ul {
+        display: none;
+        position: absolute;
+        top: 40px;
+        left: 0;
+        background: #003566;
+        padding: 0;
+        border-radius: 5px;
+      }
+      nav ul li:hover ul {
+        display: block;
+      }
+      nav ul li ul li {
+        width: 150px;
+        padding: 10px;
+      }
+      .slideshow {
+        width: 100%;
+        height: 400px;
+        overflow: hidden;
+        position: relative;
+      }
+      .slideshow img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        display: none;
+        transition: transform 0.6s ease;
+      }
+      .slideshow img:hover {
+        transform: scale(1.1);
+      }
+      .center-content {
+        padding: 40px;
+        text-align: center;
+      }
+      .center-content h1 {
+        margin-bottom: 10px;
+      }
+      footer {
+        background: #003566;
+        color: white;
+        padding: 20px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h2>Software Training Centre</h2>
+      <nav>
+        <ul>
+          <li>
+            Courses
+            <ul>
+              <li>Java</li>
+              <li>Python</li>
+              <li>Web Development</li>
+              <li>Data Science</li>
+            </ul>
+          </li>
+          <li>About</li>
+          <li>
+            Contact
+            <ul>
+              <li>Email</li>
+              <li>Phone</li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <div class="slideshow">
+      <img
+        src="https://images.unsplash.com/photo-1527689368864-3a821dbccc34"
+        class="slide"
+      />
+      <img
+        src="https://images.unsplash.com/photo-1519389950473-47ba0277781c"
+        class="slide"
+      />
+      <img
+        src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d"
+        class="slide"
+      />
+    </div>
+    <section class="center-content">
+      <h1>Welcome to Our Training Centre</h1>
+      <p>Learn industry-demand technologies with real-time projects.</p>
+      <button
+        id="knowMoreBtn"
+        style="
+          padding: 12px 25px;
+          background: #003566;
+          color: white;
+          border: none;
+          cursor: pointer;
+        "
+      >
+        Know More
+      </button>
+    </section>
+    <footer>© 2025 Software Training Centre | All Rights Reserved</footer>
+    <script>
+      window.addEventListener("load", function () {
+        console.log("Page loaded successfully");
+      });
+      document
+        .getElementById("knowMoreBtn")
+        .addEventListener("click", function () {
+          alert("Welcome! Explore our courses to boost your career.");
+        });
+      const navItems = document.querySelectorAll("nav ul li");
+      navItems.forEach((item) => {
+        item.addEventListener("mouseover", () => {
+          console.log("Hovering on menu: " + item.innerText);
+        });
+      });
+      let slideIndex = 0;
+      const slides = document.querySelectorAll(".slide");
+      function showSlides() {
+        slides.forEach((slide) => (slide.style.display = "none"));
+        slideIndex++;
+        if (slideIndex > slides.length) {
+          slideIndex = 1;
+        }
+        slides[slideIndex - 1].style.display = "block";
+      }
+      showSlides();
+      setInterval(showSlides, 3000);
+    </script>
+  </body>
+</html>
