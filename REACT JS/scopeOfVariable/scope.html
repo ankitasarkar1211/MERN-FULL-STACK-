@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lexical Scope and Closures Demo</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+      }
+      .container {
+        text-align: center;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Lexical Scope and Closures Demo</h2>
+      <p>This demo illustrates lexical scope and closures in JavaScript.</p>
+      <button id="lexicalScopeBtn">Show Lexical Scope</button>
+      <button id="closureBtn">Show Closure</button>
+      <div id="output"></div>
+    </div>
+    <script>
+      // Lexical Scope Demo
+      function lexicalScopeDemo() {
+        // Local variable
+        let localVar = "I am a local variable";
+        // Accessing global variable
+        console.log(globalVar); // Accessible within lexicalScopeDemo function
+        // Accessing local variable
+        console.log(localVar); // Accessible within lexicalScopeDemo function
+      }
+      // Global variable
+      let globalVar = "I am a global variable";
+      // Closure Demo
+      function outerFunction() {
+        // Outer function variable
+        let outerVar = "I am from outerFunction";
+        // Inner function with closure
+        function innerFunction() {
+          console.log(outerVar); // Accessing outerVar from lexical scope
+        }
+        // Returning inner function
+        return innerFunction;
+      }
+      // Get output element
+      const output = document.getElementById("output");
+      // Add event listener for lexical scope button
+      document
+        .getElementById("lexicalScopeBtn")
+        .addEventListener("click", function () {
+          output.innerHTML = ""; // Clear previous output
+          output.innerHTML = "<p>Output of Lexical Scope Demo:</p>";
+          try {
+            lexicalScopeDemo(); // Call lexicalScopeDemo function
+          } catch (error) {
+            output.innerHTML += "<p>Error: " + error.message + "</p>"; // Handle error if any
+          }
+        });
+      // Add event listener for closure button
+      document
+        .getElementById("closureBtn")
+        .addEventListener("click", function () {
+          output.innerHTML = ""; // Clear previous output
+          output.innerHTML = "<p>Output of Closure Demo:</p>";
+          // Calling outerFunction to get closure
+          let closure = outerFunction();
+          // Calling closure
+          closure(); // Output: 'I am from outerFunction'
+        });
+    </script>
+  </body>
+</html>
