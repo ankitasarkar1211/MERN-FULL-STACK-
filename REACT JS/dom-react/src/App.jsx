@@ -1,35 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useRef } from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
+function DomExample() {
+  const headingRef = useRef(null);
+  const inputRef = useRef(null);
+
+  const changeDom = () => {
+    // Change text
+    headingRef.current.innerText = "DOM Updated using React";
+
+    // Change style
+    headingRef.current.style.color = "blue";
+
+    // Focus input field
+    inputRef.current.focus();
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div style={{ padding: "20px" }}>
+      <h2 ref={headingRef}>Original Heading</h2>
+
+      <input
+        ref={inputRef}
+        type="text"
+        placeholder="Click button to focus"
+      />
+
+      <br /><br />
+
+      <button onClick={changeDom}>
+        Change DOM
+      </button>
+    </div>
+  );
 }
 
-export default App
+export default DomExample;
