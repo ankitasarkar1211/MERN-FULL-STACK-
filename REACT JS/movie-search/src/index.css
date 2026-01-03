@@ -1,0 +1,47 @@
+
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #121212;
+  color: white;
+}
+
+.app {
+  text-align: center;
+  padding: 40px;
+}
+
+.search-box {
+  margin-bottom: 20px;
+}
+
+input {
+  padding: 10px;
+  width: 250px;
+  font-size: 16px;
+}
+
+button {
+  padding: 10px 15px;
+  margin-left: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.movie-card {
+  margin-top: 20px;
+  background: #1f1f1f;
+  padding: 20px;
+  border-radius: 10px;
+  display: inline-block;
+}
+
+.movie-card img {
+  width: 200px;
+  border-radius: 10px;
+}
+
+.error {
+  color: red;
+}

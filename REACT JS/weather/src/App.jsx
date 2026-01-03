@@ -3,12 +3,12 @@ import React, { useState } from 'react';
 
 const Weather = () => {
   const [city, setCity] = useState('');
-  const [weather, setWeather] = useState(null);
+  const [weather, setWeather] = useState(null); //composite data, an object, contains both strings and numbers
   const [error, setError] = useState('');
 
   const fetchWeather = async () => {
     const apiKey = 'd843f74c77749be23b0d054951698e7c'; // Replace with your OpenWeatherMap API key
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`; //template literal
 
     try {
       const response = await fetch(url);
