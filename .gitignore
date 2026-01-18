@@ -54,3 +54,6 @@ dkms.conf
 # debug information files
 *.dwo
 .vscode/
+node_modules/
+package-lock.json/
+package.json/
