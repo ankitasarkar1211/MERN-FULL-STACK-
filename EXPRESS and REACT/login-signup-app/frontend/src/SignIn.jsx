@@ -15,57 +15,62 @@ function SignIn() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form Data Submitted:", formData);
+
+    try {
+      const res = await fetch("http://localhost:5000/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("Registered successfully!");
+        setFormData({ username: "", email: "", password: "" });
+      } else {
+        alert(data.message);
+      }
+
+    } catch (err) {
+      alert("Backend not running");
+    }
   };
 
   return (
     <div className="signin-page">
       <div className="signin-container">
         <h2>Register</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="signin-form-group">
-            <label>Username:</label>
-            <input
-              type="text"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-            />
-          </div>
 
-          <div className="signin-form-group">
-            <label>Email:</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-            />
-          </div>
+        <form className="signin-form-group" onSubmit={handleSubmit}>
+          <input
+            name="username"
+            placeholder="Username"
+            value={formData.username}
+            onChange={handleChange}
+          />
 
-          <div className="signin-form-group">
-            <label>Password:</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-            />
-          </div>
+          <input
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+          />
 
-          <button type="submit" className="signin-btn">
-            Sign in
-          </button>
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+          />
+
+          <button type="submit">Sign Up</button>
         </form>
-
-        <button
-          className="login-redirect-btn"
-          onClick={() => window.location.href = "/login"}
-        >
-          Login
-        </button>
       </div>
     </div>
   );

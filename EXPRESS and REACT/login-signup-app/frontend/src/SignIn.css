@@ -50,6 +50,7 @@ body{
   border: 1px solid #ccc;
   outline: none;
   font-size: 14px;
+  margin-bottom: 10px;
   transition: border 0.3s, box-shadow 0.3s;
 }
 
