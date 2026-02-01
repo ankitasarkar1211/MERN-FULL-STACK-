@@ -1,13 +1,13 @@
 import { useState } from "react";
 function App() {
   const [text, setText] = useState("");
-  const saveText = async () => {
-    await fetch("http://localhost:5000/save", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: text }),
+  const saveText = async () => { // Function to save text to backend
+    await fetch("http://localhost:5000/save", {  // Backend API endpoint
+      method: "POST", // HTTP method
+      headers: { "Content-Type": "application/json" }, // Headers
+      body: JSON.stringify({ message: text }), // Request body
     });
-    setText("");
+    setText(""); // Clear input field
     alert("Saved to MongoDB");
   };
   return (
