@@ -9,7 +9,9 @@ mongoose.connect('mongodb://localhost:27017/taskDB');
 const taskSchema= new mongoose.Schema({
     Title: {type: String, required: true},
     Description: String,
+    Subject: String,
     Status: String,
+    Deadline: Date,
     Created_At: {type: Date, default: Date.now}
 });
 const taskModel= mongoose.model('Task', taskSchema);
