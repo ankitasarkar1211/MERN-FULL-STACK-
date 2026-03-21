@@ -1,9 +1,15 @@
+import React from "react";
+import TaskForm from "./components/TaskForm";
+import TaskList from "./components/TaskList";
+
 function App() {
   return (
-    <div className="bg-green-500 text-white text-3xl p-10">
-      Tailwind Working
+    <div>
+      <h1>Study Task Manager</h1>
+      <TaskForm />
+      <TaskList />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

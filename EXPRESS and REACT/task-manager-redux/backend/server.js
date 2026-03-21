@@ -9,14 +9,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect("mongodb://localhost:27017/taskmanager", {
-    useNewUrlParser: true, // Add this line to use the new URL parser
-    useUnifiedTopology: true // Add this line to use the new Server Discover and Monitoring engine
-}).then(() => {
-    console.log("Connected to MongoDB");
-}).catch((err) => {
-    console.error("Error connecting to MongoDB:", err);
-});
+mongoose.connect("mongodb://127.0.0.1:27017/taskmanager")
+.then(() => console.log("MongoDB Connected"))
+.catch(err => console.log("Error connecting to MongoDB:", err));
 
 app.use("/api", taskRoutes);
 
