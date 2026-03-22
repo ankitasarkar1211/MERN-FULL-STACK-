@@ -1,17 +1,17 @@
 import React from "react";
+import {BrowserRouter, Routes, Route} from "react-router-dom";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 function App() {
-  return (
-    <div className="min-h-screen bg-gray-100">
-
-      {/* Navbar */}
-      <div className="bg-blue-600 text-white py-4 shadow-md">
-        <h1 className="text-center text-2xl font-bold">
-          Study Task Manager
-        </h1>
-      </div>
-
-    </div>
+  return(
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<h1>Home page</h1>} />
+        <Route path="/login" element={<Login/>} />
+        <Route path="/register" element={<Register/>} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
