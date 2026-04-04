@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { loginUser } from "../api/auth";
 import InputField from "../components/InputField";
 import GoogleIcon from "../components/GoogleIcon";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +14,19 @@ export default function Login() {
 
   const handleChange = (field) => (e) =>
     setForm({ ...form, [field]: e.target.value });
+
+  const handleLogin= async() => {
+    try {
+      const res= await loginUser(form);
+
+      localStorage.setItem('token', res.data.token);
+      alert("Login Successful");
+
+      navigate("/");
+    } catch(err) {
+      alert(err.response?.data?.message || "Login failed");
+    }
+  }
 
   return (
     <div
@@ -145,6 +159,7 @@ export default function Login() {
             {/* CTA */}
             <div className="pt-1">
               <button
+                onClick={handleLogin}
                 className="w-full py-3.5 rounded-xl text-sm font-semibold tracking-widest uppercase text-white transition-all duration-200 active:scale-95"
                 style={{
                   background:

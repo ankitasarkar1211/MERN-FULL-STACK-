@@ -1,4 +1,5 @@
 import { useState } from "react";
+import {registerUser} from "../api/auth";
 import InputField from "../components/InputField";
 import GoogleIcon from "../components/GoogleIcon";
 import { useNavigate } from "react-router-dom";
@@ -15,6 +16,21 @@ export default function Register() {
 
   const handleChange = (field) => (e) =>
     setForm({ ...form, [field]: e.target.value });
+
+  const handleRegister= async() => {
+    try {
+      const {name, email, password, confirm} = form;
+      if(password!=confirm) {
+        alert("passwords do not match");
+        return;
+      }
+      const res= await registerUser({name, email, password});
+      alert("Registration Succesful");
+      navigate("/");
+    } catch(err) {
+      alert(err.response?.data?.message || "Registration failed");
+    }
+  };
 
   return (
     <div
@@ -126,6 +142,7 @@ export default function Register() {
             {/* CTA */}
             <div className="pt-1">
               <button
+                onClick={handleRegister}
                 className="w-full py-3.5 rounded-xl text-sm font-semibold tracking-widest uppercase text-white"
                 style={{
                   background: "linear-gradient(135deg, #c47a45 0%, #a0522d 60%, #8b4513 100%)",
