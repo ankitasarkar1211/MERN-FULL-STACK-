@@ -22,7 +22,7 @@ export default function Login() {
       localStorage.setItem('token', res.data.token);
       alert("Login Successful");
 
-      navigate("/");
+      navigate("/dashboard");
     } catch(err) {
       alert(err.response?.data?.message || "Login failed");
     }
