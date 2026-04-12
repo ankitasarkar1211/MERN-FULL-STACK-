@@ -1,121 +1,101 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useState, useEffect } from "react";
+import { io } from "socket.io-client";
+
+const socket = io("http://localhost:5000");
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [username, setUsername] = useState("");
+  const [isJoined, setIsJoined] = useState(false);
+  const [message, setMessage] = useState("");
+  const [chat, setChat] = useState([]);
 
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
+  useEffect(() => {
+    socket.on("receive_message", (data) => {
+      setChat((prev) => [...prev, data]);
+    });
+
+    return () => socket.off("receive_message");
+  }, []);
+
+  const sendMessage = () => {
+    if (message.trim() === "") return;
+
+    const messageData = {
+      user: username,
+      message: message,
+      time: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    };
+
+    socket.emit("send_message", messageData);
+    setMessage("");
+  };
+
+  // Join screen
+  if (!isJoined) {
+    return (
+      <div className="h-screen flex flex-col items-center justify-center bg-gray-100">
+        <h1 className="text-3xl mb-4 font-bold">Whispr 💬</h1>
+        <input
+          className="border p-2 mb-3"
+          placeholder="Enter your name"
+          onChange={(e) => setUsername(e.target.value)}
+        />
         <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
+          className="bg-blue-500 text-white px-4 py-2"
+          onClick={() => setIsJoined(true)}
         >
-          Count is {count}
+          Join Chat
         </button>
-      </section>
+      </div>
+    );
+  }
 
-      <div className="ticks"></div>
+  // Chat UI
+  return (
+    <div className="h-screen flex flex-col items-center justify-center bg-gray-100">
+      <h1 className="text-2xl font-bold mb-4">Whispr 💬</h1>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      <div className="w-80 h-80 bg-white shadow rounded p-3 overflow-y-auto">
+        {chat.map((msg, index) => (
+          <div
+            key={index}
+            className={`my-2 flex ${
+              msg.user === username ? "justify-end" : "justify-start"
+            }`}
+          >
+            <div
+              className={`p-2 rounded max-w-[70%] ${
+                msg.user === username
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200"
+              }`}
+            >
+              <p className="text-sm font-semibold">{msg.user}</p>
+              <p>{msg.message}</p>
+              <p className="text-xs text-right">{msg.time}</p>
+            </div>
+          </div>
+        ))}
+      </div>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      <div className="flex mt-3">
+        <input
+          className="border p-2 w-60"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+        />
+        <button
+          className="bg-blue-500 text-white px-4"
+          onClick={sendMessage}
+        >
+          Send
+        </button>
+      </div>
+    </div>
+  );
 }
 
-export default App
+export default App;
