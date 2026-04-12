@@ -1,6 +1,6 @@
 const express = require("express");
-const http = require("http");
-const { Server } = require("socket.io");
+const http = require("http"); // For creating HTTP server to work with Socket.IO
+const { Server } = require("socket.io"); // Socket.IO server class 
 const cors = require("cors");
 
 const app = express();
@@ -20,15 +20,18 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
-  // Listen for message
-  socket.on("send_message", (data) => {
-    console.log("Message:", data);
-
-    // Send to all users
-    io.emit("receive_message", data);
+  // Join room
+  socket.on("join_room", (room) => {
+    socket.join(room);
+    console.log(`User joined room: ${room}`);
   });
 
-  // Disconnect
+  // Send message to room only
+  socket.on("send_message", (data) => {
+    console.log("Message to room:", data.room);
+    socket.to(data.room).emit("receive_message", data);
+  });
+
   socket.on("disconnect", () => {
     console.log("User disconnected:", socket.id);
   });
