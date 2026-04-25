@@ -10,8 +10,24 @@ function App() {
   const [isJoined, setIsJoined] = useState(false);
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
+  const [typingUser, setTypingUser] = useState("");
 
   const chatEndRef = useRef(null);
+
+  useEffect(() => {
+    const savedUsername = localStorage.getItem("username");
+    const savedTargetUser = localStorage.getItem("targetUser");
+    const savedRoom = localStorage.getItem("room");
+
+    if (savedUsername && savedTargetUser && savedRoom) {
+      setUsername(savedUsername);
+      setTargetUser(savedTargetUser);
+      setRoom(savedRoom);
+      setIsJoined(true);
+
+      socket.emit("join_room", savedRoom);
+    }
+  }, []);
 
   // 🔹 Receive messages + load old messages
   useEffect(() => {
@@ -22,10 +38,19 @@ function App() {
     socket.on("load_messages", (messages) => {
       setChat(messages);
     });
+    socket.on("show_typing", (user) => {
+      setTypingUser(user);
+    });
+
+    socket.on("hide_typing", () => {
+      setTypingUser("");
+    });
 
     return () => {
       socket.off("receive_message");
       socket.off("load_messages");
+      socket.off("show_typing");
+      socket.off("hide_typing");
     };
   }, []);
 
@@ -54,6 +79,13 @@ function App() {
     }
 
     const roomId = generateRoomId(username, targetUser);
+
+    //saving username, target user and room to local storage because
+    //if I refresh page username becomes "" without it
+    //chats don't align properly while refreshing message
+    localStorage.setItem("username", username);
+    localStorage.setItem("targetUser", targetUser);
+    localStorage.setItem("room", roomId);
 
     setRoom(roomId);
     setChat([]); // clear previous chat
@@ -113,9 +145,18 @@ function App() {
   // 💬 Chat UI
   return (
     <div className="h-screen flex flex-col items-center justify-center bg-gray-100">
-      <h1 className="text-2xl font-bold mb-2">
-        Chat with: {targetUser}
-      </h1>
+      <h1 className="text-2xl font-bold mb-2">Chat with: {targetUser}</h1>
+
+      <button
+        className="bg-red-500 text-white px-3 py-1 mb-2 rounded"
+        onClick={() => {
+          localStorage.clear();
+          setIsJoined(false);
+          setChat([]);
+        }}
+      >
+        Logout
+      </button>
 
       <div className="w-80 h-80 bg-white shadow rounded p-3 overflow-y-auto">
         {chat.map((msg, index) => (
@@ -127,9 +168,7 @@ function App() {
           >
             <div
               className={`p-2 rounded max-w-[70%] ${
-                msg.user === username
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200"
+                msg.user === username ? "bg-blue-500 text-white" : "bg-gray-200"
               }`}
             >
               <p className="text-sm font-semibold">
@@ -144,16 +183,30 @@ function App() {
       </div>
 
       <div className="flex mt-3">
+        {typingUser && typingUser !== username && (
+          <p className="text-sm text-gray-500 mb-1">
+            {typingUser} is typing...
+          </p>
+        )}
         <input
           className="border p-2 w-60"
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={(e) => {
+            setMessage(e.target.value);
+
+            socket.emit("typing", {
+              room: room,
+              user: username,
+            });
+
+            // stop typing after delay
+            setTimeout(() => {
+              socket.emit("stop_typing", { room: room });
+            }, 1000);
+          }}
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
         />
-        <button
-          className="bg-blue-500 text-white px-4"
-          onClick={sendMessage}
-        >
+        <button className="bg-blue-500 text-white px-4" onClick={sendMessage}>
           Send
         </button>
       </div>
