@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 
 const socket = io("http://localhost:5000");
@@ -11,35 +11,58 @@ function App() {
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
 
+  const chatEndRef = useRef(null);
+
+  // 🔹 Receive messages + load old messages
   useEffect(() => {
     socket.on("receive_message", (data) => {
       setChat((prev) => [...prev, data]);
     });
 
-    return () => socket.off("receive_message");
+    socket.on("load_messages", (messages) => {
+      setChat(messages);
+    });
+
+    return () => {
+      socket.off("receive_message");
+      socket.off("load_messages");
+    };
   }, []);
 
+  // 🔹 Auto scroll
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chat]);
+
+  // 🔹 Generate room ID
   const generateRoomId = (user1, user2) => {
     return [user1.trim().toLowerCase(), user2.trim().toLowerCase()]
       .sort()
       .join("_");
   };
 
+  // 🔹 Join room
   const joinRoom = () => {
     if (!username || !targetUser) {
       alert("Enter both usernames");
       return;
     }
 
+    if (username === targetUser) {
+      alert("You cannot chat with yourself");
+      return;
+    }
+
     const roomId = generateRoomId(username, targetUser);
-    console.log("Joining room:", roomId); // DEBUG
 
     setRoom(roomId);
+    setChat([]); // clear previous chat
     socket.emit("join_room", roomId);
-    console.log("Room generated:", roomId);
+
     setIsJoined(true);
   };
 
+  // 🔹 Send message
   const sendMessage = () => {
     if (message.trim() === "") return;
 
@@ -54,9 +77,6 @@ function App() {
     };
 
     socket.emit("send_message", messageData);
-
-    // Add message locally (since server doesn't send back to sender)
-    setChat((prev) => [...prev, messageData]);
 
     setMessage("");
   };
@@ -79,7 +99,11 @@ function App() {
           onChange={(e) => setTargetUser(e.target.value)}
         />
 
-        <button className="bg-blue-500 text-white px-4 py-2" onClick={joinRoom}>
+        <button
+          disabled={!username || !targetUser}
+          className="bg-blue-500 text-white px-4 py-2 disabled:bg-gray-400"
+          onClick={joinRoom}
+        >
           Join Chat
         </button>
       </div>
@@ -89,7 +113,9 @@ function App() {
   // 💬 Chat UI
   return (
     <div className="h-screen flex flex-col items-center justify-center bg-gray-100">
-      <h1 className="text-2xl font-bold mb-2">Room: {room}</h1>
+      <h1 className="text-2xl font-bold mb-2">
+        Chat with: {targetUser}
+      </h1>
 
       <div className="w-80 h-80 bg-white shadow rounded p-3 overflow-y-auto">
         {chat.map((msg, index) => (
@@ -101,15 +127,20 @@ function App() {
           >
             <div
               className={`p-2 rounded max-w-[70%] ${
-                msg.user === username ? "bg-blue-500 text-white" : "bg-gray-200"
+                msg.user === username
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200"
               }`}
             >
-              <p className="text-sm font-semibold">{msg.user}</p>
+              <p className="text-sm font-semibold">
+                {msg.user === username ? "You" : msg.user}
+              </p>
               <p>{msg.message}</p>
               <p className="text-xs text-right">{msg.time}</p>
             </div>
           </div>
         ))}
+        <div ref={chatEndRef}></div>
       </div>
 
       <div className="flex mt-3">
@@ -117,8 +148,12 @@ function App() {
           className="border p-2 w-60"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
         />
-        <button className="bg-blue-500 text-white px-4" onClick={sendMessage}>
+        <button
+          className="bg-blue-500 text-white px-4"
+          onClick={sendMessage}
+        >
           Send
         </button>
       </div>
