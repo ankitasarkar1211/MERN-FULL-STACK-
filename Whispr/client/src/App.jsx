@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-import { io } from "socket.io-client";
-
-const socket = io("http://localhost:5000");
+import Join from "./components/Join";
+import Chat from "./components/Chat";
+import { socket } from "./socket";
 
 function App() {
   const [targetUser, setTargetUser] = useState("");
@@ -15,7 +15,7 @@ function App() {
 
   const chatEndRef = useRef(null);
 
-  // 🔹 Restore session
+  // Restore session
   useEffect(() => {
     const savedUsername = localStorage.getItem("username");
     const savedTargetUser = localStorage.getItem("targetUser");
@@ -27,17 +27,21 @@ function App() {
       setRoom(savedRoom);
       setIsJoined(true);
 
-      socket.emit("join_room", savedRoom);
+      const rejoin = () => {
+        socket.emit("join_room", savedRoom);
+        socket.emit("join_user", { room: savedRoom, user: savedUsername });
+      };
 
-      // 🔥 ALSO ADD THIS
-      socket.emit("join_user", {
-        room: savedRoom,
-        user: savedUsername,
-      });
+      // If already connected, emit immediately; otherwise wait
+      if (socket.connected) {
+        rejoin();
+      } else {
+        socket.once("connect", rejoin);
+      }
     }
   }, []);
 
-  // 🔹 Socket listeners
+  // Socket listeners
   useEffect(() => {
     socket.on("receive_message", (data) => {
       setChat((prev) => [...prev, data]);
@@ -55,7 +59,6 @@ function App() {
       setTypingUser("");
     });
 
-    // 🔥 ONLINE USERS LISTENER
     socket.on("online_users", (users) => {
       setOnlineUsers(users);
     });
@@ -69,19 +72,19 @@ function App() {
     };
   }, []);
 
-  // 🔹 Auto scroll
+  // Auto scroll
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chat]);
 
-  // 🔹 Generate room
+  // Generate room
   const generateRoomId = (user1, user2) => {
     return [user1.trim().toLowerCase(), user2.trim().toLowerCase()]
       .sort()
       .join("_");
   };
 
-  // 🔹 Join room
+  // Join room
   const joinRoom = () => {
     if (!username || !targetUser) {
       alert("Enter both usernames");
@@ -104,7 +107,6 @@ function App() {
 
     socket.emit("join_room", roomId);
 
-    // 🔥 IMPORTANT
     socket.emit("join_user", {
       room: roomId,
       user: username,
@@ -113,7 +115,7 @@ function App() {
     setIsJoined(true);
   };
 
-  // 🔹 Send message
+  // Send message
   const sendMessage = () => {
     if (message.trim() === "") return;
 
@@ -131,117 +133,29 @@ function App() {
     setMessage("");
   };
 
-  // 🔐 Join Screen
-  if (!isJoined) {
-    return (
-      <div className="h-screen flex flex-col items-center justify-center bg-gray-100">
-        <h1 className="text-3xl mb-4 font-bold">Whispr 💬</h1>
-
-        <input
-          className="border p-2 mb-2"
-          placeholder="Your name"
-          onChange={(e) => setUsername(e.target.value.trim().toLowerCase())}
-        />
-
-        <input
-          className="border p-2 mb-3"
-          placeholder="Chat with (username)"
-          onChange={(e) => setTargetUser(e.target.value.trim().toLowerCase())}
-        />
-
-        <button
-          disabled={!username || !targetUser}
-          className="bg-blue-500 text-white px-4 py-2 disabled:bg-gray-400"
-          onClick={joinRoom}
-        >
-          Join Chat
-        </button>
-      </div>
-    );
-  }
-
-  // 💬 Chat UI
-  return (
-    <div className="h-screen flex flex-col items-center justify-center bg-gray-100">
-      <h1 className="text-2xl font-bold mb-1">
-        Chat with: {targetUser}
-      </h1>
-
-      {/* 🔥 ONLINE USERS */}
-      <div className="text-sm text-green-600 mb-2">
-        Online: {onlineUsers.join(", ")}
-      </div>
-
-      <button
-        className="bg-red-500 text-white px-3 py-1 mb-2 rounded"
-        onClick={() => {
-          localStorage.clear();
-          setIsJoined(false);
-          setChat([]);
-        }}
-      >
-        Logout
-      </button>
-
-      <div className="w-80 h-80 bg-white shadow rounded p-3 overflow-y-auto">
-        {chat.map((msg, index) => (
-          <div
-            key={index}
-            className={`my-2 flex ${
-              msg.user === username ? "justify-end" : "justify-start"
-            }`}
-          >
-            <div
-              className={`p-2 rounded max-w-[70%] ${
-                msg.user === username
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200"
-              }`}
-            >
-              <p className="text-sm font-semibold">
-                {msg.user === username ? "You" : msg.user}
-              </p>
-              <p>{msg.message}</p>
-              <p className="text-xs text-right">{msg.time}</p>
-            </div>
-          </div>
-        ))}
-        <div ref={chatEndRef}></div>
-      </div>
-
-      {/* 🔥 Typing indicator */}
-      {typingUser && typingUser !== username && (
-        <p className="text-sm text-gray-500 mt-2">
-          {typingUser} is typing...
-        </p>
-      )}
-
-      <div className="flex mt-2">
-        <input
-          className="border p-2 w-60"
-          value={message}
-          onChange={(e) => {
-            setMessage(e.target.value);
-
-            socket.emit("typing", {
-              room: room,
-              user: username,
-            });
-
-            setTimeout(() => {
-              socket.emit("stop_typing", { room: room });
-            }, 1500);
-          }}
-          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-        />
-        <button
-          className="bg-blue-500 text-white px-4"
-          onClick={sendMessage}
-        >
-          Send
-        </button>
-      </div>
-    </div>
+  return !isJoined ? (
+    <Join
+      username={username}
+      setUsername={setUsername}
+      targetUser={targetUser}
+      setTargetUser={setTargetUser}
+      joinRoom={joinRoom}
+    />
+  ) : (
+    <Chat
+      targetUser={targetUser}
+      username={username}
+      message={message}
+      setMessage={setMessage}
+      sendMessage={sendMessage}
+      chat={chat}
+      typingUser={typingUser}
+      onlineUsers={onlineUsers}
+      chatEndRef={chatEndRef}
+      room={room}
+      setIsJoined={setIsJoined}
+      setChat={setChat}
+    />
   );
 }
 
