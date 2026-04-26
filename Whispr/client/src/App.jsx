@@ -11,9 +11,11 @@ function App() {
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
   const [typingUser, setTypingUser] = useState("");
+  const [onlineUsers, setOnlineUsers] = useState([]);
 
   const chatEndRef = useRef(null);
 
+  // 🔹 Restore session
   useEffect(() => {
     const savedUsername = localStorage.getItem("username");
     const savedTargetUser = localStorage.getItem("targetUser");
@@ -26,10 +28,16 @@ function App() {
       setIsJoined(true);
 
       socket.emit("join_room", savedRoom);
+
+      // 🔥 ALSO ADD THIS
+      socket.emit("join_user", {
+        room: savedRoom,
+        user: savedUsername,
+      });
     }
   }, []);
 
-  // 🔹 Receive messages + load old messages
+  // 🔹 Socket listeners
   useEffect(() => {
     socket.on("receive_message", (data) => {
       setChat((prev) => [...prev, data]);
@@ -38,6 +46,7 @@ function App() {
     socket.on("load_messages", (messages) => {
       setChat(messages);
     });
+
     socket.on("show_typing", (user) => {
       setTypingUser(user);
     });
@@ -46,11 +55,17 @@ function App() {
       setTypingUser("");
     });
 
+    // 🔥 ONLINE USERS LISTENER
+    socket.on("online_users", (users) => {
+      setOnlineUsers(users);
+    });
+
     return () => {
       socket.off("receive_message");
       socket.off("load_messages");
       socket.off("show_typing");
       socket.off("hide_typing");
+      socket.off("online_users");
     };
   }, []);
 
@@ -59,7 +74,7 @@ function App() {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chat]);
 
-  // 🔹 Generate room ID
+  // 🔹 Generate room
   const generateRoomId = (user1, user2) => {
     return [user1.trim().toLowerCase(), user2.trim().toLowerCase()]
       .sort()
@@ -80,16 +95,20 @@ function App() {
 
     const roomId = generateRoomId(username, targetUser);
 
-    //saving username, target user and room to local storage because
-    //if I refresh page username becomes "" without it
-    //chats don't align properly while refreshing message
     localStorage.setItem("username", username);
     localStorage.setItem("targetUser", targetUser);
     localStorage.setItem("room", roomId);
 
     setRoom(roomId);
-    setChat([]); // clear previous chat
+    setChat([]);
+
     socket.emit("join_room", roomId);
+
+    // 🔥 IMPORTANT
+    socket.emit("join_user", {
+      room: roomId,
+      user: username,
+    });
 
     setIsJoined(true);
   };
@@ -109,7 +128,6 @@ function App() {
     };
 
     socket.emit("send_message", messageData);
-
     setMessage("");
   };
 
@@ -122,13 +140,13 @@ function App() {
         <input
           className="border p-2 mb-2"
           placeholder="Your name"
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => setUsername(e.target.value.trim().toLowerCase())}
         />
 
         <input
           className="border p-2 mb-3"
           placeholder="Chat with (username)"
-          onChange={(e) => setTargetUser(e.target.value)}
+          onChange={(e) => setTargetUser(e.target.value.trim().toLowerCase())}
         />
 
         <button
@@ -145,7 +163,14 @@ function App() {
   // 💬 Chat UI
   return (
     <div className="h-screen flex flex-col items-center justify-center bg-gray-100">
-      <h1 className="text-2xl font-bold mb-2">Chat with: {targetUser}</h1>
+      <h1 className="text-2xl font-bold mb-1">
+        Chat with: {targetUser}
+      </h1>
+
+      {/* 🔥 ONLINE USERS */}
+      <div className="text-sm text-green-600 mb-2">
+        Online: {onlineUsers.join(", ")}
+      </div>
 
       <button
         className="bg-red-500 text-white px-3 py-1 mb-2 rounded"
@@ -168,7 +193,9 @@ function App() {
           >
             <div
               className={`p-2 rounded max-w-[70%] ${
-                msg.user === username ? "bg-blue-500 text-white" : "bg-gray-200"
+                msg.user === username
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200"
               }`}
             >
               <p className="text-sm font-semibold">
@@ -182,12 +209,14 @@ function App() {
         <div ref={chatEndRef}></div>
       </div>
 
-      <div className="flex mt-3">
-        {typingUser && typingUser !== username && (
-          <p className="text-sm text-gray-500 mb-1">
-            {typingUser} is typing...
-          </p>
-        )}
+      {/* 🔥 Typing indicator */}
+      {typingUser && typingUser !== username && (
+        <p className="text-sm text-gray-500 mt-2">
+          {typingUser} is typing...
+        </p>
+      )}
+
+      <div className="flex mt-2">
         <input
           className="border p-2 w-60"
           value={message}
@@ -199,14 +228,16 @@ function App() {
               user: username,
             });
 
-            // stop typing after delay
             setTimeout(() => {
               socket.emit("stop_typing", { room: room });
-            }, 1000);
+            }, 1500);
           }}
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
         />
-        <button className="bg-blue-500 text-white px-4" onClick={sendMessage}>
+        <button
+          className="bg-blue-500 text-white px-4"
+          onClick={sendMessage}
+        >
           Send
         </button>
       </div>
