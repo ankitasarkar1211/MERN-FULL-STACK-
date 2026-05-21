@@ -1,9 +1,9 @@
 const Message = require("../models/Message");
 
 const onlineUsers = {};
+const userSockets = {};
 
 function chatSocket(socket, io) {
-
   // 🔹 JOIN ROOM
   socket.on("join_room", async (room) => {
     socket.join(room);
@@ -23,6 +23,12 @@ function chatSocket(socket, io) {
   socket.on("join_user", ({ room, user }) => {
     socket.user = user;
 
+    if (!userSockets[user]) {
+      userSockets[user] = new Set();
+    }
+
+    userSockets[user].add(socket.id);
+
     if (!onlineUsers[room]) {
       onlineUsers[room] = [];
     }
@@ -34,6 +40,19 @@ function chatSocket(socket, io) {
     console.log("Online users:", onlineUsers);
 
     io.to(room).emit("online_users", onlineUsers[room]);
+  });
+
+  // 🔹 LEAVE ROOM
+  socket.on("leave_room", ({ room, user }) => {
+    socket.leave(room);
+
+    if (onlineUsers[room]) {
+      onlineUsers[room] = onlineUsers[room].filter((u) => u !== user);
+
+      io.to(room).emit("online_users", onlineUsers[room]);
+    }
+
+    console.log(`${user} left room: ${room}`);
   });
 
   // 🔹 TYPING START
@@ -52,9 +71,10 @@ function chatSocket(socket, io) {
 
     try {
       const newMessage = new Message(data);
-      await newMessage.save();
 
-      io.to(data.room).emit("receive_message", data);
+      const savedMessage = await newMessage.save();
+
+      io.to(data.room).emit("receive_message", savedMessage);
     } catch (err) {
       console.log("Error saving message:", err);
     }
@@ -63,13 +83,20 @@ function chatSocket(socket, io) {
   // 🔹 DISCONNECT
   socket.on("disconnect", () => {
     const room = socket.room;
+    const user = socket.user;
 
-    if (room && onlineUsers[room]) {
-      onlineUsers[room] = onlineUsers[room].filter(
-        (user) => user !== socket.user
-      );
+    if (user && userSockets[user]) {
+      userSockets[user].delete(socket.id);
 
-      io.to(room).emit("online_users", onlineUsers[room]);
+      if (userSockets[user].size === 0) {
+        delete userSockets[user];
+
+        if (room && onlineUsers[room]) {
+          onlineUsers[room] = onlineUsers[room].filter((u) => u !== user);
+
+          io.to(room).emit("online_users", onlineUsers[room]);
+        }
+      }
     }
 
     console.log("User disconnected:", socket.id);

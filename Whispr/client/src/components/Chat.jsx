@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { socket } from "../socket";
 
 function Chat({
@@ -15,6 +16,7 @@ function Chat({
   setChat,
 }) {
   const isOnline = onlineUsers.includes(targetUser);
+  const typingTimeoutRef = useRef(null);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-amber-50 relative overflow-hidden">
@@ -64,16 +66,17 @@ function Chat({
           {/* Leave button */}
           <button
             onClick={() => {
+              localStorage.clear();
+
               socket.emit("leave_room", {
-                room: room,
+                room,
                 user: username,
               });
 
               socket.disconnect();
 
-              localStorage.clear();
-              setIsJoined(false);
               setChat([]);
+              setIsJoined(false);
             }}
             className="bg-white/15 border border-white/25 text-amber-50 text-xs font-bold tracking-wide rounded-lg px-3.5 py-1.5 hover:bg-white/25 transition-colors"
           >
@@ -95,7 +98,7 @@ function Chat({
               const isMine = msg.user === username;
               return (
                 <div
-                  key={index}
+                  key={msg._id || index}
                   className={`flex ${isMine ? "justify-end" : "justify-start"}`}
                 >
                   <div
@@ -146,8 +149,17 @@ function Chat({
             value={message}
             onChange={(e) => {
               setMessage(e.target.value);
-              socket.emit("typing", { room, user: username });
-              setTimeout(() => socket.emit("stop_typing", { room }), 1500);
+
+              socket.emit("typing", {
+                room,
+                user: username,
+              });
+
+              clearTimeout(typingTimeoutRef.current);
+
+              typingTimeoutRef.current = setTimeout(() => {
+                socket.emit("stop_typing", { room });
+              }, 1500);
             }}
             onKeyDown={(e) => e.key === "Enter" && sendMessage()}
           />

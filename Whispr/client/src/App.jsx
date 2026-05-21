@@ -7,7 +7,9 @@ function App() {
   const [targetUser, setTargetUser] = useState("");
   const [username, setUsername] = useState("");
   const [room, setRoom] = useState("");
-  const [isJoined, setIsJoined] = useState(false);
+  const [isJoined, setIsJoined] = useState(
+    localStorage.getItem("joined") === "true",
+  );
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
   const [typingUser, setTypingUser] = useState("");
@@ -33,42 +35,50 @@ function App() {
       };
 
       // If already connected, emit immediately; otherwise wait
-      if (socket.connected) {
-        rejoin();
-      } else {
-        socket.once("connect", rejoin);
+      if (!socket.connected) {
+        socket.connect();
       }
+
+      rejoin();
     }
   }, []);
 
   // Socket listeners
   useEffect(() => {
-    socket.on("receive_message", (data) => {
+    const receiveMessage = (data) => {
       setChat((prev) => [...prev, data]);
-    });
+    };
 
-    socket.on("load_messages", (messages) => {
+    const loadMessages = (messages) => {
       setChat(messages);
-    });
+    };
 
-    socket.on("show_typing", (user) => {
+    const showTyping = (user) => {
       setTypingUser(user);
-    });
+    };
 
-    socket.on("hide_typing", () => {
+    const hideTyping = () => {
       setTypingUser("");
-    });
+    };
 
-    socket.on("online_users", (users) => {
+    const updateOnlineUsers = (users) => {
       setOnlineUsers(users);
-    });
+    };
+
+    socket.on("receive_message", receiveMessage);
+    socket.on("load_messages", loadMessages);
+    socket.on("show_typing", showTyping);
+    socket.on("hide_typing", hideTyping);
+    socket.on("online_users", updateOnlineUsers);
 
     return () => {
-      socket.off("receive_message");
-      socket.off("load_messages");
-      socket.off("show_typing");
-      socket.off("hide_typing");
-      socket.off("online_users");
+      socket.off("receive_message", receiveMessage);
+      socket.off("load_messages", loadMessages);
+      socket.off("show_typing", showTyping);
+      socket.off("hide_typing", hideTyping);
+      socket.off("online_users", updateOnlineUsers);
+
+      socket.disconnect();
     };
   }, []);
 
@@ -86,12 +96,16 @@ function App() {
 
   // Join room
   const joinRoom = () => {
-    if (!username || !targetUser) {
+    if (!socket.connected) {
+      socket.connect();
+    }
+
+    if (!username.trim() || !targetUser.trim()) {
       alert("Enter both usernames");
       return;
     }
 
-    if (username === targetUser) {
+    if (username.trim().toLowerCase() === targetUser.trim().toLowerCase()) {
       alert("You cannot chat with yourself");
       return;
     }
